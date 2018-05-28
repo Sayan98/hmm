@@ -39,9 +39,9 @@ class MM:
 
 class HMM():
     def __init__(self, corpus: str):
-        self.corpus = corpus
+        self.corpus = self.preprocess_corpus(corpus)
         
-        self.characters = set(corpus)
+        self.characters = set(self.corpus)
         self.t_mat = self.get_transistion_probability()
 
         self.mm = MM(states=self.characters,
@@ -68,6 +68,10 @@ class HMM():
     def next(self, state):
         return self.mm.next(state=state)
 
+    def preprocess_corpus(self, corpus):
+        corpus = corpus.lower()
+        return corpus.replace("\s+", "")
+
 
 if __name__ == "__main__":
     corpus = open("tinyshakespeare.txt", "rt").read()
@@ -75,7 +79,8 @@ if __name__ == "__main__":
     hidden_markov_model = HMM(corpus=corpus)
 
 
-    present_state = 'T'
+    present_state = input("Enter a character to start with: ")
+
     for _ in range(140):
         print(present_state, end='')
         present_state = hidden_markov_model.next(state=present_state)
